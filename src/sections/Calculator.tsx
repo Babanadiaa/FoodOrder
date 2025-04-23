@@ -65,24 +65,18 @@ export default function Calculator() {
                     <div className="calculating__choose calculating__choose_medium">
                         <input
                             type="text"
-                            // inputMode='numeric'
-                            // pattern='[0-9]*'
                             placeholder="Введіть ріст"
                             className={`calculating__choose-item ${heightError ? 'error' : ''}`}
                             onChange={(e) => setHeight(e.target.value || 0)}
                         />
                         <input
                             type="text"
-                            inputMode='numeric'
-                            pattern='[0-9]*'
                             placeholder="Введіть вагу"
                             className={`calculating__choose-item ${weightError ? 'error' : ''}`}
                             onChange={(e) => setWeight(e.target.value || 0)}
                         />
                         <input
                             type="text"
-                            inputMode='numeric'
-                            pattern='[0-9]*'
                             placeholder="Введіть вік"
                             className={`calculating__choose-item ${ageError ? 'error' : ''}`}
                             onChange={(e) => setAge(e.target.value || 0)}

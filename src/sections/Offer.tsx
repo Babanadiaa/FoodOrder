@@ -1,47 +1,39 @@
-import React, { useEffect, useState } from 'react'
-import left from '../icons/left.svg'
-import right from '../icons/right.svg'
-import pepper from '../img/slider/pepper.jpg'
-import food from '../img/slider/food-12.jpg'
-import oil from '../img/slider/olive-oil.jpg'
-import paprika from '../img/slider/paprika.jpg'
+import React, { useEffect, useState } from 'react';
+import left from '../icons/left.svg';
+import right from '../icons/right.svg';
+import pepper from '../img/slider/pepper.jpg';
+import food from '../img/slider/food-12.jpg';
+import oil from '../img/slider/olive-oil.jpg';
+import paprika from '../img/slider/paprika.jpg';
+import Modal from './Modal'; // Імпортуємо компонент Modal
+import { useModal } from '../functions/useModal'; // Імпортуємо кастомний хук для модалки
+import Button from "../components/Button";
 
 const slides = [
-
-    <img src={pepper} alt="pepper" />
-    ,
-
-
-    <img src={food} alt="food" />
-    ,
-
-
-    <img src={oil} alt="oil" />
-    ,
-
-
+    <img src={pepper} alt="pepper" />,
+    <img src={food} alt="food" />,
+    <img src={oil} alt="oil" />,
     <img src={paprika} alt="paprika" />
-
-
-]
+];
 
 export default function Offer() {
-    const [slide, setSlide] = useState(2)
+    const [slide, setSlide] = useState(2);
+    const { isOpen, openModal, closeModal } = useModal(); // Використовуємо кастомний хук
+
     useEffect(() => {
-        if (slide == slides.length) {
-            setSlide(0)
+        if (slide === slides.length) {
+            setSlide(0);
         } else if (slide < 0) {
-            setSlide(slides.length - 1)
-        };
+            setSlide(slides.length - 1);
+        }
 
         const interval = setInterval(() => {
             setSlide((prev) => (prev + 1) % slides.length);
         }, 3000); // Перемикання кожні 3 секунди
 
         return () => clearInterval(interval); // Очищення при розмонтуванні компонента
+    }, [slide]);
 
-
-    }, [slide])
     return (
         <section className="offer">
             <div className="bgc_y" />
@@ -57,12 +49,9 @@ export default function Offer() {
                     </div>
                 </div>
                 <div className="offer__action">
-                    <button data-modal="" className="btn btn_dark">
-                        Зв'язатися з нами
-                    </button>
+                    <Button onClick={openModal}>Зв'язатися з нами</Button>
                 </div>
             </div>
-
 
             <div className="container">
                 <div className="offer__advantages">
@@ -79,19 +68,24 @@ export default function Offer() {
                     </div>
                 </div>
 
-
                 <div className="offer__slider">
                     <div className="offer__slider-counter">
-                        <div className="offer__slider-prev"
-                            onClick={() => { setSlide(slide - 1) }} >
-                            <img src={left} alt="prev"
-                            />
+                        <div
+                            className="offer__slider-prev"
+                            onClick={() => {
+                                setSlide(slide - 1);
+                            }}
+                        >
+                            <img src={left} alt="prev" />
                         </div>
                         <span id="current">0{slide + 1}</span>/<span id="total">0{slides.length}</span>
-                        <div className="offer__slider-next"
-                            onClick={() => { setSlide(slide + 1) }}>
-                            <img src={right} alt="next"
-                            />
+                        <div
+                            className="offer__slider-next"
+                            onClick={() => {
+                                setSlide(slide + 1);
+                            }}
+                        >
+                            <img src={right} alt="next" />
                         </div>
                     </div>
                     <div className="offer__slider-wrapper">
@@ -100,8 +94,11 @@ export default function Offer() {
                                 <div
                                     className={`offer__slide ${index === slide ? 'active' : ''}`}
                                     key={index}
-                                    style={{ transform: `translateX(${slide * -100}%)`, transition: "transform 0.5s ease-in-out" }}>
-                                    {/* {slides[index]} */}
+                                    style={{
+                                        transform: `translateX(${slide * -100}%)`,
+                                        transition: 'transform 0.5s ease-in-out'
+                                    }}
+                                >
                                     {curr}
                                 </div>
                             ))}
@@ -110,8 +107,15 @@ export default function Offer() {
                 </div>
             </div>
 
-
-        </section >
-
-    )
+            {/* Модальне вікно */}
+            <Modal isOpen={isOpen} onClose={closeModal}>
+                <h2>Ми зв'яжемось з вами як найшвидше</h2>
+                <form>
+                    <input placeholder="Ваше ім'я" />
+                    <input placeholder="Ваш номер телефону" />
+                    <button type="submit">Відправити</button>
+                </form>
+            </Modal>
+        </section>
+    );
 }

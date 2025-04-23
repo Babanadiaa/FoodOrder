@@ -1,78 +1,82 @@
 import React, { useState } from 'react';
 import HandleSubmit from '../functions/HandleSubmit';
+import ThankModal from '../components/ThankModal';
 
 interface ModalProps {
     isOpen: boolean;
-    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    setFormData: React.Dispatch<React.SetStateAction<{ name: string; phone: string }>>;
-    setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onClose: () => void;
 }
 
-export default function Modal({
-    isOpen,
-    setIsOpen,
-    setFormData,
-    setIsModalOpen
-}: ModalProps) {
-    if (!isOpen) return null; // Якщо модалка не відкрита, не рендеримо
-
+const Modal = ({ isOpen, onClose }: ModalProps) => {
     const [localFormData, setLocalFormData] = useState({
-        name: '',
-        phone: ''
+        name: "",
+        phone: "",
     });
 
-    const handleClose = () => {
-        setIsOpen(false);  // Закриваємо модалку
-    };
-
-    // Викликаємо HandleSubmit з відповідними параметрами
     const { handleSubmit } = HandleSubmit({
         formData: localFormData,
-        setFormData,
-        setIsModalOpen
+        setFormData: setLocalFormData,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setLocalFormData({ ...localFormData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setLocalFormData((prev) => ({ ...prev, [name]: value }));
     };
 
+    if (!isOpen) return null;
+
     return (
-        <div className={`modal ${isOpen ? 'active' : ''}`}>
+        <div className="modal active">
             <div className="modal__dialog">
                 <div className="modal__content">
-                    <form onSubmit={(e) => handleSubmit(e)}>
-                        <div
-                            className="modal__close"
-                            onClick={handleClose}  // Закриття модалки при кліку на хрестик
-                        >
-                            ✖
-                        </div>
-                        <div className="modal__title">Ми зв'яжемось з вами як найшвидше</div>
+                    <button className="modal__close" onClick={onClose}>
+                        ✖
+                    </button>
+                    <h2>Ми зв'яжемось з вами як найшвидше</h2>
+                    <form onSubmit={handleSubmit}>
                         <input
-                            placeholder="Ваше ім'я"
-                            name="name"
                             type="text"
-                            className="modal__input"
-                            value={localFormData.name}  // Використовуємо локальний стан
+                            name="name"
+                            placeholder="Ваше ім'я"
+                            value={localFormData.name}
                             onChange={handleChange}
+                            required
                         />
                         <input
-                            placeholder="Ваш номер телефону"
-                            name="phone"
                             type="tel"
-                            className="modal__input"
-                            value={localFormData.phone}  // Використовуємо локальний стан
+                            name="phone"
+                            placeholder="Ваш номер телефону"
+                            value={localFormData.phone}
                             onChange={handleChange}
+                            required
                         />
-                        <button
-                            className="btn btn_dark btn_min"
-                            type="submit"
-                        >
-                            Передзвоніть мені
+                        <button type="submit" className="btn btn_dark">
+                            Відправити
                         </button>
                     </form>
                 </div>
             </div>
         </div>
     );
-}
+};
+
+export default Modal;
+
+const ParentComponent = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isThankModalOpen, setIsThankModalOpen] = useState(false); // Стан для ThankModal
+
+    const handleClose = () => {
+        setIsOpen(false); // Закриваємо основну модалку
+    };
+
+    return (
+        <>
+            <Modal isOpen={isOpen} onClose={handleClose} />
+            <ThankModal
+                isOpen={isThankModalOpen}
+                onClose={() => setIsThankModalOpen(false)} // Закриття ThankModal
+            />
+        </>
+    );
+};

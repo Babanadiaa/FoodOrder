@@ -15,9 +15,7 @@ import vegy from './img/tabs/vegy.jpg'
 export default function App() {
   return (
     <>
-      {/* <img src={vegy} alt="" /> */}
       <Header />
-      <Modal />
       <Tabs />
       <SidePanel />
       <Offer />
@@ -27,6 +25,6 @@ export default function App() {
       <Timer />
       <Footer />
     </>
-  )
+  );
 }
 

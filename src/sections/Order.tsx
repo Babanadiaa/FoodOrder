@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import right from "../icons/right.svg";
 import HandleSubmit from "../functions/HandleSubmit";
 import ThankModal from "../components/ThankModal";
 
@@ -10,38 +9,33 @@ export default function Order() {
     });
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    // Отримуємо handleSubmit з функції HandleSubmit
-    const { handleSubmit } = HandleSubmit({ formData, setFormData, setIsModalOpen });
+    const { handleSubmit } = HandleSubmit({
+        formData,
+        setFormData,
+        setIsModalOpen, // Передаємо функцію для відкриття ThankModal
+    });
 
     return (
         <section className="order">
             <div className="container">
-                <div className="title">Замовляй пробний день прямо зараз!</div>
                 <form className="order__form" onSubmit={handleSubmit}>
                     <input
                         required
                         placeholder="Ваше ім'я"
                         name="name"
                         type="text"
-                        className="order__input"
                         value={formData.name}
-                        onChange={handleChange}
+                        onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
                     />
                     <input
                         required
                         placeholder="Ваш номер телефону"
                         name="phone"
                         type="tel"
-                        className="order__input"
                         value={formData.phone}
-                        onChange={handleChange}
+                        onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
                     />
-                    <img src={right} alt="right" />
-                    <button type="submit" className="btn btn_dark btn_min">Передзвоніть мені</button>
+                    <button type="submit">Передзвоніть мені</button>
                 </form>
             </div>
 
